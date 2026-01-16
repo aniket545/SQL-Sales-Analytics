@@ -89,7 +89,6 @@ FROM sales
 WHERE substr("Order Date", -4) = '2017';
 
 
-
 -- Query 11: Monthly sales trend
 SELECT
     substr(Order_Date, -4) || '-' || substr(Order_Date, 1, 2) AS month,
@@ -97,4 +96,95 @@ SELECT
 FROM sales
 GROUP BY month
 ORDER BY month;
+
+Customer & Advanced Analysis
+
+-- Query 12: Top 10 customers by total sales
+SELECT
+    "Customer Name",
+    ROUND(SUM(Sales), 2) AS total_sales
+FROM sales
+GROUP BY "Customer Name"
+ORDER BY total_sales DESC
+LIMIT 10;
+
+
+-- Query 13: Top 10 customers by total profit
+SELECT
+    "Customer Name",
+    ROUND(SUM(Profit), 2) AS total_profit
+FROM sales
+GROUP BY "Customer Name"
+ORDER BY total_profit DESC
+LIMIT 10;
+
+
+-- Query 14: Customers causing highest losses
+SELECT
+    "Customer Name",
+    ROUND(SUM(Profit), 2) AS total_profit
+FROM sales
+GROUP BY "Customer Name"
+HAVING SUM(Profit) < 0
+ORDER BY total_profit ASC
+LIMIT 10;
+
+
+-- Query 15: Customer segment performance
+SELECT
+    Segment,
+    ROUND(SUM(Sales), 2) AS total_sales,
+    ROUND(SUM(Profit), 2) AS total_profit
+FROM sales
+GROUP BY Segment
+ORDER BY total_profit DESC;
+
+
+-- Query 16: Repeat customers (placed more than 5 orders)
+SELECT
+    "Customer Name",
+    COUNT(DISTINCT Order_ID) AS total_orders
+FROM sales
+GROUP BY "Customer Name"
+HAVING COUNT(DISTINCT Order_ID) > 5
+ORDER BY total_orders DESC;
+
+
+-- Query 17: Average order value by customer
+SELECT
+    "Customer Name",
+    ROUND(AVG(Sales), 2) AS avg_order_value
+FROM sales
+GROUP BY "Customer Name"
+ORDER BY avg_order_value DESC
+LIMIT 10;
+
+
+-- Query 18: Most profitable sub-categories
+SELECT
+    "Sub Category",
+    ROUND(SUM(Profit), 2) AS total_profit
+FROM sales
+GROUP BY "Sub Category"
+ORDER BY total_profit DESC
+LIMIT 10;
+
+
+-- Query 19: Loss-making sub-categories
+SELECT
+    "Sub Category",
+    ROUND(SUM(Profit), 2) AS total_profit
+FROM sales
+GROUP BY "Sub Category"
+HAVING SUM(Profit) < 0
+ORDER BY total_profit ASC;
+
+
+-- Query 20: Year-wise sales trend
+SELECT
+    substr("Order Date", -4) AS year,
+    ROUND(SUM(Sales), 2) AS total_sales
+FROM sales
+GROUP BY year
+ORDER BY year;
 
