@@ -1,0 +1,100 @@
+-- Project 2: SQL-Driven Sales & Customer Analytics
+
+
+-- Query 1: View sample data
+SELECT * FROM sales LIMIT 10;
+
+
+-- Query 2: Total sales and total profit
+SELECT
+    ROUND(SUM(Sales), 2) AS total_sales,
+    ROUND(SUM(Profit), 2) AS total_profit
+FROM sales;
+
+
+-- Query 3: Sales and profit by category
+SELECT
+    Category,
+    ROUND(SUM(Sales), 2) AS total_sales,
+    ROUND(SUM(Profit), 2) AS total_profit
+FROM sales
+GROUP BY Category
+ORDER BY total_sales DESC;
+
+
+-- Query 4: Top 10 products by total sales
+SELECT
+    "Product Name",
+    ROUND(SUM(Sales), 2) AS total_sales
+FROM sales
+GROUP BY "Product Name"
+ORDER BY total_sales DESC
+LIMIT 10;
+
+
+-- Query 5: Sales and profit by region
+SELECT
+    Region,
+    ROUND(SUM(Sales), 2) AS total_sales,
+    ROUND(SUM(Profit), 2) AS total_profit
+FROM sales
+GROUP BY Region
+ORDER BY total_profit DESC;
+
+
+-- Query 6: Orders with negative profit
+SELECT
+    "Order ID",
+    "Product Name",
+    Sales,
+    Profit
+FROM sales
+WHERE Profit < 0;
+
+
+-- Query 7: High-value loss-making orders
+SELECT
+    Order_ID,
+    Product_Name,
+    Sales,
+    Profit
+FROM sales
+WHERE Profit < 0 AND Sales > 500;
+
+
+-- Query 8: Unprofitable categories
+SELECT
+    Category,
+    ROUND(SUM(Profit), 2) AS total_profit
+FROM sales
+GROUP BY Category
+HAVING SUM(Profit) < 0;
+
+
+-- Query 9: Regions with sales but overall loss
+SELECT
+    Region,
+    ROUND(SUM(Sales), 2) AS total_sales,
+    ROUND(SUM(Profit), 2) AS total_profit
+FROM sales
+WHERE Sales > 100
+GROUP BY Region
+HAVING SUM(Profit) < 0;
+
+
+-- Query 10: Total sales in 2017
+SELECT
+    ROUND(SUM(Sales), 2) AS sales_2017
+FROM sales
+WHERE substr("Order Date", -4) = '2017';
+
+
+
+-- Query 11: Monthly sales trend
+SELECT
+    substr(Order_Date, -4) || '-' || substr(Order_Date, 1, 2) AS month,
+    ROUND(SUM(Sales), 2) AS total_sales
+FROM sales
+GROUP BY month
+ORDER BY month;
+
